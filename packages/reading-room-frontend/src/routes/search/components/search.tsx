@@ -56,6 +56,7 @@ const parseFilter = (
 export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
   const [searchParams] = useSearchParams()
   const [query, setQuery] = useState<string | null>(searchParams.get('query'))
+  const [refCodeQuery, setRefCodeQuery] = useState<string | null>(searchParams.get('refCodeQuery'))
   const [showHelp, setShowHelp] = useState<boolean>(false)
   const navigate = useNavigate()
   const [filters, setFilters] = useState<Dictionary<FieldFilter>>(
@@ -93,13 +94,14 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
   const search = () => {
     navigate(
       '/search?query=' +
-        (query ? query : '') +
+        (query ? query : '') + '&refCodeQuery=' + (refCodeQuery ? refCodeQuery : '') + 
         (filters ? '&filter=' + encodeURIComponent(createFilterString()) : '')
     )
   }
 
   const clearQuery = () => {
     setQuery(null)
+    setRefCodeQuery(null)
     setFilters({})
     search()
   }
@@ -155,6 +157,15 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
 
   const onSubmit = (event: React.KeyboardEvent<HTMLDivElement>) => {
     setQuery((event.target as HTMLInputElement).value)
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      event.stopPropagation()
+      search()
+    }
+  }
+
+  const onRefCodeSubmit = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    setRefCodeQuery((event.target as HTMLInputElement).value)
     if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
@@ -257,78 +268,7 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
                       ),
                     }}
                   />
-
-                  <Stack direction="row" spacing={2}>
-                    {fieldFilterConfigs?.find(
-                      (f) => f.fieldName === 'attachmentType'
-                    ) && (
-                      <TextField
-                        select
-                        label="Mediatyp"
-                        SelectProps={{
-                          multiple: true,
-                          renderValue: (selected) => {
-                            if (
-                              !selected ||
-                              (selected as string[]).length === 0
-                            ) {
-                              return ''
-                            }
-                            return (selected as string[]).join(', ')
-                          },
-                          sx: {
-                            lineHeight: 1.8,
-                          },
-                        }}
-                        value={filters['attachmentType']?.values ?? []}
-                        size="small"
-                        onChange={(e) => {
-                          const values = e.target.value as unknown as string[]
-
-                          if (values.length > 1 && !values[0]) {
-                            values.splice(0, 1)
-                          }
-
-                          updateFilter('attachmentType', values)
-                          search()
-                        }}
-                        disabled={filtersLoading}
-                        sx={{
-                          width: {
-                            xs: '100%',
-                            sm: '150px',
-                          },
-                          transition: 'opacity 0.2s',
-                        }}
-                      >
-                        {fieldFilterConfigs
-                          .find((f) => f.fieldName === 'attachmentType')
-                          ?.allValues?.map((value: string) => (
-                            <MenuItem
-                              key={value}
-                              value={value}
-                              disabled={filtersLoading}
-                            >
-                              <Checkbox
-                                checked={
-                                  filters['attachmentType']?.values.indexOf(
-                                    value
-                                  ) > -1
-                                }
-                                disabled={filtersLoading}
-                              />
-                              {fieldFilterConfigs
-                                .find((f) => f.fieldName === 'attachmentType')
-                                ?.values?.includes(value) ? (
-                                <b>{value}</b>
-                              ) : (
-                                value
-                              )}
-                            </MenuItem>
-                          ))}
-                      </TextField>
-                    )}
-                    <Box
+                  <Box
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -351,10 +291,158 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
                           Söktips
                         </Typography>
                       </IconButton>
-                    </Box>
-                  </Stack>
+                  </Box>
                 </Stack>
               </Stack>
+
+              <Stack direction="row" alignItems="center" position="relative">
+    <Typography
+      sx={{
+        width: '100px',
+        display: { xs: 'none', xl: 'flex' },
+        position: 'absolute',
+        left: '-120px',
+        justifyContent: 'flex-end',
+      }}
+    >
+      Refkod:
+    </Typography>
+
+    <Stack
+      direction={{ xs: 'column', sm: 'row' }}
+      spacing={2}
+      sx={{ width: '100%' }}
+    >
+      <TextField
+        variant="outlined"
+        sx={{ width: { xs: '100%' }, bgcolor: 'white' }}
+        placeholder="Sök efter referenskod"
+        defaultValue={refCodeQuery}
+        onKeyUp={onRefCodeSubmit}
+        inputProps={{
+          style: {
+            height: '12px',
+            padding: '19px 10px 15px 12px',
+            color: 'black',
+            backgroundColor: 'white',
+          },
+        }}
+        InputProps={{
+          style: {
+            backgroundColor: 'white',
+          },
+          endAdornment: (
+            <InputAdornment position="end">
+              <Stack direction="row">
+                {refCodeQuery && (
+                  <IconButton
+                    onClick={() => clearQuery()}
+                    sx={{
+                      bgcolor: 'white',
+                      height: '44px',
+                      width: '44px',
+                      borderRadius: 0,
+                      '&:hover': { bgcolor: 'white ' },
+                    }}
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                )}
+                <IconButton
+                  edge="end"
+                  disableRipple
+                  onClick={() => search()}
+                  sx={{
+                    color: 'white',
+                    bgcolor: '#53565a',
+                    borderRadius: 0,
+                    height: '46px',
+                    width: '46px',
+                    marginRight: '-13px',
+                  }}
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Stack>
+            </InputAdornment>
+          ),
+        }}
+        
+      />
+
+<Stack direction="row" spacing={2}>
+                    {fieldFilterConfigs?.find(
+                      (f) => f.fieldName === 'documentType'
+                    ) && (
+                      <TextField
+                        select
+                        label="Handlingstyp"
+                        SelectProps={{
+                          multiple: true,
+                          renderValue: (selected) => {
+                            if (
+                              !selected ||
+                              (selected as string[]).length === 0
+                            ) {
+                              return ''
+                            }
+                            return (selected as string[]).join(', ')
+                          },
+                          sx: {
+                            lineHeight: 1.8,
+                          },
+                        }}
+                        value={filters['documentType']?.values ?? []}
+                        size="small"
+                        onChange={(e) => {
+                          const values = e.target.value as unknown as string[]
+
+                          if (values.length > 1 && !values[0]) {
+                            values.splice(0, 1)
+                          }
+
+                          updateFilter('documentType', values)
+                          search()
+                        }}
+                        disabled={filtersLoading}
+                        sx={{
+                          width: {
+                            xs: '100%',
+                            sm: '269px',
+                          },
+                          transition: 'opacity 0.2s',
+                        }}
+                      >
+                        {fieldFilterConfigs
+                          .find((f) => f.fieldName === 'documentType')
+                          ?.allValues?.map((value: string) => (
+                            <MenuItem
+                              key={value}
+                              value={value}
+                              disabled={filtersLoading}
+                            >
+                              <Checkbox
+                                checked={
+                                  filters['documentType']?.values.indexOf(
+                                    value
+                                  ) > -1
+                                }
+                                disabled={filtersLoading}
+                              />
+                              {fieldFilterConfigs
+                                .find((f) => f.fieldName === 'documentType')
+                                ?.values?.includes(value) ? (
+                                <b>{value}</b>
+                              ) : (
+                                value
+                              )}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                    )}
+                  </Stack>
+    </Stack>
+  </Stack>
 
               <Stack direction="row" alignItems="center" position="relative">
                 {fieldFilterConfigs && (
@@ -376,7 +464,7 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
                       sx={{ width: '100%' }}
                     >
                       {fieldFilterConfigs
-                        .filter((config) => config.fieldName !== 'mediaType')
+                        .filter((config) => config.fieldName !== 'documentType')
                         .map((filterConfig: FieldFilterConfig) => {
                           const isDisabled = isFieldDisabled(
                             filterConfig,
@@ -420,7 +508,7 @@ export const Search = ({ searchEnabled }: { searchEnabled: boolean }) => {
                                 </Box>
                               )
                             case FilterType.values:
-                              if (filterConfig.fieldName === 'attachmentType') {
+                              if (filterConfig.fieldName === 'documentType') {
                                 return null
                               }
                               return (

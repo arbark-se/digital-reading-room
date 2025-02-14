@@ -518,5 +518,12 @@ export const metaDataFieldConfigurations: Dictionary<
       xs: 6,
       sm: 4,
     },
+    {
+      fieldName: 'referenceCode',
+      heading: 'REFCODE',
+      type: MetaDataFieldType.TextField,
+      xs: 6,
+      sm: 4,
+    },
   ],
 }

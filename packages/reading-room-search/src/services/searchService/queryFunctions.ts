@@ -200,16 +200,24 @@ const createAccessFilter = (
 
 export const createSearchQuery = (
   queryString: string | undefined,
+  refCodeQueryString: string | undefined,
   accessFilter: QueryDslQueryContainer[] | undefined,
   filterString: string | undefined
 ) => {
   const must: QueryDslQueryContainer[] = []
-
   if (queryString) {
     must.push({
       query_string: {
         query: queryString,
       },
+    })
+  }
+
+  if (refCodeQueryString){
+    must.push({
+        match_phrase_prefix: {
+          "fields.referenceCode.value" : refCodeQueryString,
+        }
     })
   }
 
@@ -340,7 +348,7 @@ export const setValues = async (
     documentIds,
     fileNames
   )
-  const query = createSearchQuery(undefined, accessFilter, filterString)
+  const query = createSearchQuery(undefined, undefined, accessFilter, filterString)
 
   const searchResults = await client.search({
     size: 0,
@@ -416,6 +424,7 @@ const createSortingArray = (sortOrder: any) => {
 
 export const search = async (
   query: string | string[] | undefined,
+  refCodeQuery: string | string[] | undefined,
   depositors: string[] | undefined,
   archiveInitiators: string[] | undefined,
   series: string[] | undefined,
@@ -429,19 +438,20 @@ export const search = async (
   sortOrder: string | string[] | undefined
 ) => {
   const queryString = Array.isArray(query) ? query[0] : query
+  const refCodeQueryString = Array.isArray(refCodeQuery) ? refCodeQuery[0] : refCodeQuery
   const filterString = Array.isArray(filter) ? filter[0] : filter
   const sortString = Array.isArray(sort) ? sort[0] : sort
   const sortOrderString = Array.isArray(sortOrder) ? sortOrder[0] : sortOrder
 
   const accessFilter = createAccessFilter(
-    depositors,
+    [], //depositors,
     archiveInitiators,
     series,
     volumes,
     documentIds,
     fileNames
   )
-  const searchQuery = createSearchQuery(queryString, accessFilter, filterString)
+  const searchQuery = createSearchQuery(queryString, refCodeQueryString, accessFilter, filterString)
   const sortingArray = createSortingArray({
     field: sortString,
     order: sortOrderString,

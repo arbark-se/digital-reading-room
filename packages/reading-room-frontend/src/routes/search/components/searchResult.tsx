@@ -23,6 +23,7 @@ import ArchiveInitiatorFields from './archiveInitatorFields'
 interface Props {
   documents: Document[] | undefined
   query: string | undefined
+  refCodeQuery: string | undefined
   filter: string | undefined
   page: number
   pageSize: number
@@ -38,6 +39,7 @@ const searchUrl = import.meta.env.VITE_SEARCH_URL || 'http://localhost:4001'
 
 export function SearchResult({
   query,
+  refCodeQuery,
   filter,
   documents,
   page,
@@ -68,6 +70,8 @@ export function SearchResult({
       document.id +
       '?query=' +
       query +
+      '&refCodeQuery=' + 
+      refCodeQuery + 
       pageparam +
       filterparam +
       showparam +
@@ -163,7 +167,7 @@ export function SearchResult({
                 <MenuItem value={'relevance'}>Relevans</MenuItem>
                 <MenuItem value={'filename'}>Filnamn</MenuItem>
                 <MenuItem value={'title'}>Titel</MenuItem>
-                <MenuItem value={'motiveId'}>MotivID</MenuItem>
+                <MenuItem value={'referenceCode'}>Referens Kod</MenuItem>
                 <MenuItem value={'tags'}>Taggar</MenuItem>
               </Select>
             </FormControl>

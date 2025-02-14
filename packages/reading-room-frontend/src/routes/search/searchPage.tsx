@@ -10,6 +10,7 @@ export const PageSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
   const filter = searchParams.get('filter') ?? undefined
+  const refCodeQuery = searchParams.get('refCodeQuery') ?? undefined
   const [sort, setSort] = useState(searchParams.get('sort') || 'relevance')
   const [sortOrder, setSortOrder] = useState(
     searchParams.get('sortOrder') || 'asc'
@@ -22,6 +23,7 @@ export const PageSearch = () => {
 
   const { data, isLoading } = useSearch({
     query,
+    refCodeQuery,
     startIndex: (page - 1) * pageSize,
     filter,
     sort,
@@ -49,6 +51,7 @@ export const PageSearch = () => {
           <SearchResult
             isLoading={isLoading}
             query={query}
+            refCodeQuery = {refCodeQuery}
             filter={filter}
             documents={data?.results}
             page={page}

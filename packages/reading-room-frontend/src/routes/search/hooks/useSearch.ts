@@ -57,6 +57,7 @@ const fixSimpleQuery = (query: string | undefined | null) => {
 
 export const useSearch = ({
   query,
+  refCodeQuery,
   startIndex,
   filter,
   sort,
@@ -64,6 +65,7 @@ export const useSearch = ({
   onError,
 }: {
   query: string | undefined | null
+  refCodeQuery: string | undefined | null
   startIndex: number
   filter: string | undefined | null
   sort: string | undefined | null
@@ -71,11 +73,15 @@ export const useSearch = ({
   onError?: () => void
 }) =>
   useQuery<SearchResponse, AxiosError>({
-    queryKey: ['search', query, startIndex, filter, sort, sortOrder],
+    queryKey: ['search', query, refCodeQuery, startIndex, filter, sort, sortOrder],
     queryFn: async () => {
-      if (query || filter) {
+      if ((query || refCodeQuery) || filter) {
         const fixedQuery = fixSimpleQuery(query)
         let url = `${searchUrl}/search?query=${fixedQuery}&start=${startIndex}`
+
+        if (refCodeQuery){
+          url += `&refCodeQuery=${refCodeQuery}`
+        }
 
         if (filter) {
           url += `&filter=${encodeURIComponent(filter)}`

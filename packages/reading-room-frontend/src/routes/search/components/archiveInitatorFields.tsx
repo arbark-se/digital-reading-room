@@ -71,8 +71,8 @@ export default function ArchiveInitiatorFields({
         fieldName: 'geography',
       })
       fields.push({
-        heading: 'MOTIVID',
-        fieldName: 'motiveId',
+        heading: 'REFKOD',
+        fieldName: 'referenceCode',
       })
       fields.push({
         heading: 'MEDIETYP',

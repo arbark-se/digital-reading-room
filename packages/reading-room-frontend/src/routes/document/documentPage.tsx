@@ -38,6 +38,7 @@ export const DocumentPage = () => {
   const [nextDocumentUrl, setNextDocumentUrl] = useState<string | undefined>()
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
+  const refCodeQuery = searchParams.get('refCodeQuery') ?? undefined
   const page = searchParams.get('page') ?? undefined
   const filter = searchParams.get('filter') ?? undefined
   const sort = searchParams.get('sort') ?? undefined
@@ -56,6 +57,7 @@ export const DocumentPage = () => {
   const pageSize = 20
   const { isLoading, data } = useSearch({
     query,
+    refCodeQuery,
     startIndex: (+(page == undefined ? 2 : page) - 1) * pageSize,
     filter: filter == undefined ? '' : filter,
     sort,

@@ -7,28 +7,34 @@ export const routes = (router: KoaRouter) => {
     const filter = ctx.query.filter
 
     const fieldFilterConfigs: FieldFilterConfig[] = [
-      {
+      /*{
         fieldName: 'attachmentType',
         displayName: 'Mediatyp',
         filterType: FilterType.values,
         visualSize: 3,
-      },
+      },*/
       {
-        fieldName: 'depositor',
-        displayName: 'Deponent',
+        fieldName: 'documentType',
+        displayName: 'Handlingstyp',
         filterType: FilterType.values,
         visualSize: 3,
       },
       {
         fieldName: 'archiveInitiator',
-        parentField: 'depositor',
         displayName: 'Arkivbildare',
+        filterType: FilterType.values,
+        visualSize: 3,
+      },
+      {
+        fieldName: 'archiveName',
+        parentField: 'archiveInitiator',
+        displayName: 'Arkivnamn',
         filterType: FilterType.values,
         visualSize: 2,
       },
       {
         fieldName: 'seriesName',
-        parentField: 'archiveInitiator',
+        parentField: 'archiveName',
         displayName: 'Serie',
         filterType: FilterType.values,
         visualSize: 2,
@@ -105,8 +111,9 @@ export const routes = (router: KoaRouter) => {
   })
 
   router.get('(.*)/search', async (ctx) => {
-    const { query, start, size, filter, sort, sortOrder } = ctx.request.query
-    if (!query && !filter) {
+    const { query, refCodeQuery, start, size, filter, sort, sortOrder } = ctx.request.query
+    console.log(query, refCodeQuery)
+    if (!query && !filter && !refCodeQuery) {
       ctx.status = 400
       ctx.body = {
         errorMessage:
@@ -118,6 +125,7 @@ export const routes = (router: KoaRouter) => {
     try {
       const results = await search(
         query,
+        refCodeQuery,
         ctx.state?.user?.depositors,
         ctx.state?.user?.archiveInitiators,
         ctx.state?.user?.series,
