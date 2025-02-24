@@ -67,7 +67,11 @@ router.get('/indexlevel', async (ctx) => {
     const level = Array.isArray(ctx.query.level)
       ? ctx.query.level[0]
       : ctx.query.level
-    const results = await comprima.search(level, skip)
+
+      let levelId = level;
+      let levelName = Array.isArray(ctx.query.level_name) ? ctx.query.level_name[0] : ctx.query.level_name;
+
+    const results = await comprima.search(levelId, skip)
 
     let successful = 0
 
@@ -75,7 +79,8 @@ router.get('/indexlevel', async (ctx) => {
     // will use a lot of memory.
     for (const document of results) {
       try {
-        document.level = level
+        document.level = levelId;
+        document.levelName = levelName;
         /*        if (
           document.id !== 2203920 &&
           document.id !== 2203921 &&

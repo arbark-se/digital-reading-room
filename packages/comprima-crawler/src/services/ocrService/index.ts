@@ -98,7 +98,7 @@ export const ocrNext = async () => {
 
   const ocrTasks = next.hits.hits.map((document) => {
     console.log('Queuing', document._id)
-    return axios.get(ocrUrl + '/ocr/' + document._id + "/" + document.levelId).catch(async (error) => {
+    return axios.get(ocrUrl + '/ocr/' + document._id + "/" + document.fields?.levelId).catch(async (error) => {
       console.log('Marking document as failed', document._id)
       await markAsFailed(document._id)
     })

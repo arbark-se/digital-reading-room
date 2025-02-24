@@ -16,7 +16,7 @@ export const crawlLevels = async () => {
     log.info(`Crawling level`, level);
 
     try {
-      const { result } = await indexLevel(level.level);
+      const { result } = await indexLevel(level.level, level.level_name);
 
       level.crawled = new Date();
       level.attempts++;

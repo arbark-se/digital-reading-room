@@ -29,7 +29,8 @@ export const getUnindexedLevel = async (): Promise<Level> => {
         'depositor',
         'created',
         'failed',
-        'successful'
+        'successful',
+        'level_name'
       )
       .from<Level>('levels')
       .limit(1)
@@ -47,7 +48,8 @@ export const getUnindexedLevel = async (): Promise<Level> => {
           'depositor',
           'created',
           'failed',
-          'successful'
+          'successful',
+          'level_name'
         )
         .from<Level>('levels')
         .limit(1)

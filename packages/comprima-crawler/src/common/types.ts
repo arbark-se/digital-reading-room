@@ -12,6 +12,8 @@ export interface Level {
 
   failed: number
   successful: number
+
+  level_name: string
 }
 
 export interface Field {

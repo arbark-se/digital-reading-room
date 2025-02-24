@@ -112,7 +112,6 @@ export const routes = (router: KoaRouter) => {
 
   router.get('(.*)/search', async (ctx) => {
     const { query, refCodeQuery, start, size, filter, sort, sortOrder } = ctx.request.query
-    console.log(query, refCodeQuery)
     if (!query && !filter && !refCodeQuery) {
       ctx.status = 400
       ctx.body = {
