@@ -33,6 +33,7 @@ services:
       - NODE_ENV=ci
       - POSTGRES__HOST=postgres
       - POSTGRES__PORT=5432
+      - POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES__USER=crawler
     depends_on:
       - comprima-adapter
@@ -49,6 +50,7 @@ services:
       - LOG_LEVEL=debug
       - MODE=ocr
       - NODE_ENV=ci
+      - POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - OCR_URL=http://comprima-ocr:4003
     depends_on:
       - elasticsearch
@@ -96,7 +98,7 @@ services:
       - NODE_ENV=ci
       - COOKIE_DOMAIN=localhost
       - POSTGRES__HOST=postgres
-      - POSTGRES__PASSWORD=postgres
+      - POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES__PORT=5432
       - POSTGRES__USER=postgres
     depends_on:
