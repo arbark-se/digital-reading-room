@@ -380,6 +380,14 @@ const transformDocument = (xmlDocument: ComprimaDocument): Document => {
 
     }
 
+    if (!fields["seriesName"]){
+      fields["seriesName"] = {
+        id: 1001,
+        originalName: "serie",
+        value: "obekant serie"
+      }
+    }
+
     return {
       id: xmlDocument.Id,
       documentState: xmlDocument.DocumentState,

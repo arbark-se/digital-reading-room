@@ -71,6 +71,10 @@ router.get('/indexlevel', async (ctx) => {
       let levelId = level;
       let levelName = Array.isArray(ctx.query.level_name) ? ctx.query.level_name[0] : ctx.query.level_name;
 
+    if(!levelName){
+      levelName = "obekant nivå"
+    }
+
     const results = await comprima.search(levelId, skip)
 
     let successful = 0
@@ -80,6 +84,8 @@ router.get('/indexlevel', async (ctx) => {
     for (const document of results) {
       try {
         document.level = levelId;
+        document.fields.levelName = {id:10000, originalName:"nivånamn", value:levelName};
+        document.fields.seriesName.value = levelName;
         document.levelName = levelName;
         /*        if (
           document.id !== 2203920 &&

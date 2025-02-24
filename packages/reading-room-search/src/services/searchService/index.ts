@@ -39,13 +39,13 @@ export const routes = (router: KoaRouter) => {
         filterType: FilterType.values,
         visualSize: 2,
       },
-      {
+     /* {
         fieldName: 'volume',
         parentField: 'seriesName',
         displayName: 'Volym',
         filterType: FilterType.values,
         visualSize: 2,
-      },
+      },*/
     ]
 
     const standaloneConfigs = fieldFilterConfigs.filter((filterConfig) => {

@@ -123,7 +123,7 @@ const createAccessFilter = (
                       'fields.seriesName.value.keyword': [
                         serie
                           .split('>')[2]
-                          .split(/ - (.*)/s)[1]
+                          //.split(/ - (.*)/s)[1]
                           .trim(),
                       ],
                     },
@@ -313,7 +313,7 @@ export const setValues = async (
   fieldFilterConfigs.forEach((fieldFilterConfig) => {
     if (fieldFilterConfig.filterType === FilterType.values) {
       switch (fieldFilterConfig.fieldName) {
-        case 'seriesName':
+        case 'seriesNameXXX':
           aggs[fieldFilterConfig.fieldName] = {
             multi_terms: {
               terms: [
@@ -369,7 +369,7 @@ export const setValues = async (
         fieldFilterConfig[valueField] = aggregation.buckets
           .filter((bucket: any) => {
             if (
-              fieldFilterConfig.fieldName === 'seriesName' &&
+              fieldFilterConfig.fieldName === 'seriesNameXXX' &&
               bucket.key.length > 1 &&
               bucket.key[1] === ''
             )
@@ -385,7 +385,7 @@ export const setValues = async (
                 )
                 return config?.description
               }
-              case 'seriesName': {
+              case 'seriesNameXXX': {
                 return bucket.key
                   .filter((k: string) => k && k != '')
                   .join(' - ')
