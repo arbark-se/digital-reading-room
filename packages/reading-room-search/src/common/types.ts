@@ -19,6 +19,7 @@ interface Document {
   documentState: string
   fields: Fields
   pages: [Page]
+  level:string
 }
 
 interface User {

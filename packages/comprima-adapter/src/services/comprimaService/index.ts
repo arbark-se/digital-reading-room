@@ -60,7 +60,7 @@ export const routes = (router: KoaRouter) => {
     }
   })
 
-  router.get('/document/:documentId/attachment', async (ctx) => {
+  router.get('/document/:documentId/:levelId/attachment', async (ctx) => {
     if (!ctx.params.documentId) {
       ctx.status = 400
       ctx.body = { errorMessage: 'Missing document id' }
@@ -69,7 +69,8 @@ export const routes = (router: KoaRouter) => {
 
     try {
       const document = await comprimaAdapter.getDocument(
-        parseInt(ctx.params.documentId)
+        parseInt(ctx.params.documentId),
+        ctx.params.levelId
       )
       const attachment = await comprimaAdapter.getAttachment(document)
       const attachmentStream = attachment.data as Readable
@@ -83,7 +84,7 @@ export const routes = (router: KoaRouter) => {
     }
   })
 
-  router.get('/document/:documentId', async (ctx) => {
+  router.get('/document/:documentId/:levelId', async (ctx) => {
     if (!ctx.params.documentId) {
       ctx.status = 400
       ctx.body = { errorMessage: 'Missing document id' }
@@ -92,7 +93,8 @@ export const routes = (router: KoaRouter) => {
 
     try {
       const results = await comprimaAdapter.getDocument(
-        parseInt(ctx.params.documentId)
+        parseInt(ctx.params.documentId),
+        ctx.params.levelId
       )
       ctx.body = results
     } catch (err) {

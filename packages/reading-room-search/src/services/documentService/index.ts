@@ -14,10 +14,10 @@ class DocumentNotFoundError extends Error {
   }
 }
 
-const getAttachmentStream = async (id: string) => {
+const getAttachmentStream = async (id: string, level:string) => {
   const url = `${
     config.comprimaAdapter?.url || 'https://comprima.dev.cfn.iteam.se'
-  }/document/${id}/attachment`
+  }/document/${id}/${level}/attachment`
 
   const response = await axios({
     method: 'get',
@@ -182,7 +182,7 @@ export const routes = (router: KoaRouter) => {
         return
       }
 
-      const response = await getAttachmentStream(id)
+      const response = await getAttachmentStream(id, document.level)
       ctx.type = response.headers['content-type']?.toString() ?? 'image/jpeg'
       ctx.body = response.data
     } catch (err) {

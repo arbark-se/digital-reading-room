@@ -32,7 +32,7 @@ router.get('/healthz', async (ctx) => {
   }
 })
 
-router.get('/index/:documentId', async (ctx) => {
+router.get('/index/:documentId/:levelId', async (ctx) => {
   if (!ctx.params.documentId) {
     ctx.status = 400
     ctx.body = { errorMessage: 'Missing document id' }
@@ -40,7 +40,7 @@ router.get('/index/:documentId', async (ctx) => {
   }
 
   try {
-    const document = await comprima.getDocument(parseInt(ctx.params.documentId))
+    const document = await comprima.getDocument(parseInt(ctx.params.documentId), ctx.params.levelId)
     await index.indexDocument(document)
     ctx.body = { result: 'success' }
   } catch (err) {

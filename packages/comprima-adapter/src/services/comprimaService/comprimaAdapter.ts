@@ -273,12 +273,12 @@ const getDocuments = async (
   }
 }
 
-const getDocument = async (documentId: number): Promise<Document> => {
+const getDocument = async (documentId: number, level:string): Promise<Document> => {
   const action =
     'http://www.dms-digital.se/c3/2011/02/IC3SearchService/GetDocuments'
 
   const requestHeaders = createRequestHeaders(action)
-  const payload =
+  let payload =
     '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ns="http://www.dms-digital.se/c3/2011/02">' +
     '  <soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">' +
     '      <wsa:Action>' +
@@ -292,7 +292,29 @@ const getDocument = async (documentId: number): Promise<Document> => {
     '&lt;C3DocumentQuery xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns="http://www.dms-digital.se/c3/2011/02"&gt;' +
     '&lt;Skip&gt;0&lt;/Skip&gt;' +
     '&lt;Take&gt;10&lt;/Take&gt;' +
+   '&lt;FindIn&gt;' +
+    '    &lt;Levels&gt;'
+
+  // Add level.
+  payload +=
+    '      &lt;Level&gt;' +
+    `        &lt;Id&gt;${level}&lt;/Id&gt;` +
+    '      &lt;/Level&gt;'
+
+  payload +=
+    '    &lt;/Levels&gt;' +
+    '  &lt;/FindIn&gt;' +
     '&lt;FilterBy&gt;' +
+    '    &lt;DocumentStates&gt;' +
+    '      &lt;DocumentState&gt;Registered&lt;/DocumentState&gt;' +
+    '    &lt;/DocumentStates&gt;' +
+    '    &lt;Properties&gt;' +
+    '      &lt;Property&gt;' +
+    '        &lt;Value&gt;false&lt;/Value&gt;' +
+    '        &lt;Operator&gt;Equals&lt;/Operator&gt;' +
+    '        &lt;PropertyType&gt;IsProtected&lt;/PropertyType&gt;' +
+    '      &lt;/Property&gt;' +
+    '    &lt;/Properties&gt;' +
     '  &lt;Ids&gt;' +
     '    &lt;unsignedInt&gt;' +
     documentId +

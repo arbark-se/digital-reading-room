@@ -19,6 +19,7 @@ interface Document {
   documentState: string;
   fields: Fields;
   level?: string;
+  levelName?: string;
   pages: [Page];
 }
 
