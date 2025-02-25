@@ -35,7 +35,7 @@ interface Props {
   onSorting: (sort: string, sortOrder: string) => void
 }
 
-const searchUrl = import.meta.env.VITE_SEARCH_URL || 'http://localhost:4001'
+const searchUrl = import.meta.env.VITE_SEARCH_URL || 'api'
 
 export function SearchResult({
   query,

@@ -29,7 +29,7 @@ import {
 import { useIsLoggedIn } from '../../hooks/useIsLoggedIn'
 import { useSearch } from '../search'
 import DocumentViewer from '../search/components/documentViewer'
-const searchUrl = import.meta.env.VITE_SEARCH_URL || 'http://localhost:4001'
+const searchUrl = import.meta.env.VITE_SEARCH_URL || 'api'
 
 export const DocumentPage = () => {
   const { id } = useParams()
